@@ -1,0 +1,25 @@
+[package]
+name = "emulator"
+publish = false
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+clap = { version = "4.1.4", features = ["derive"] }
+cranelift = "0.92.0"
+cranelift-jit = "0.92.0"
+cranelift-module = "0.92.0"
+cranelift-native = "0.92.0"
+libloading = "0.7.4"
+memoffset = "0.8.0"
+rustc-hash = "1.1.0"
+tempfile = "3.3.0"
+
+# We want debug symbols on release binaries by default. We can always strip them
+# out later if necessary.
+[profile.release]
+debug = true
+[profile.bench]
+debug = true

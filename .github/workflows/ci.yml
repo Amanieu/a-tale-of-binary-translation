@@ -1,0 +1,27 @@
+on: [push, pull_request]
+
+name: Continuous integration
+
+jobs:
+  build:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: rustfmt
+      - run: sudo apt install llvm
+      - run: cargo fmt -- --check
+      - run: examples/build.sh examples/hello_world.s
+      - run: examples/build.sh examples/fib.s
+      - run: examples/build.sh examples/fib_recursive.s
+      - run: cargo run --release -- -b interpreter examples/hello_world.bin
+      - run: cargo run --release -- -b interpreter examples/fib.bin 1000
+      - run: cargo run --release -- -b interpreter examples/fib_recursive.bin 10
+      - run: cargo run --release -- -b jit-rustc examples/hello_world.bin
+      - run: cargo run --release -- -b jit-rustc examples/fib.bin 1000
+      - run: cargo run --release -- -b jit-rustc examples/fib_recursive.bin 10
+      - run: cargo run --release -- -b jit-cranelift examples/hello_world.bin
+      - run: cargo run --release -- -b jit-cranelift examples/fib.bin 1000
+      - run: cargo run --release -- -b jit-cranelift examples/fib_recursive.bin 10
